@@ -133,4 +133,4 @@ Please see the [authentication docs](api-hmac-authentication.md) for details.
 
 The GAPARS project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement Nr 732703
 
-![EU flag](https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp/raw/master/doc/logo/eu.jpg)
+![EU flag](https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp/raw/master/MMOS.SDK/doc/logo/eu.jpg)
