@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>MMOS.SDK</id>
+    <version>2.1.14</version>
+    <title>MMOS API SDK C#</title>
+    <authors>Attila Szantner</authors>
+    <owners>Attila Szantner</owners>
+    <licenseUrl>https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp/raw/master/MMOS.SDK/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp</projectUrl>
+    <iconUrl>https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp/raw/master/MMOS.SDK/doc/logo/icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Massively Multiplayer Online Science - Citizen Science API client - C# SDK</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright © 2014-19 MMOS Sàrl</copyright>
+    <tags>CitizenScience Games MMOS</tags>
+    <dependencies>
+      <dependency id="Newtonsoft.Json" version="12.0.2"/>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="README.md" target="" />
+    <file src="lib/Release/**/MMOS.SDK.dll" target="lib" />
+    <file src="doc/**/*" target="doc" />
+  </files>
+</package>

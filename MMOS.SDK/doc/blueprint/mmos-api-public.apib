@@ -1,0 +1,469 @@
+FORMAT: 1A
+HOST: https://api.depo.mmos.blue
+
+# MMOS API documentation
+
+The API of [Massively Multiplayer Online Science](http://mmos.ch) for citizen science clients
+
+::: note
+
+## Authentication
+
+All calls requires [HMAC-SHA256 authentication](https://en.wikipedia.org/wiki/Hash-based_message_authentication_code). The documetation of the exact procedures to successfully sign API calls are given to developers separately. Note that gameId is connected to APiKeys, so where a gameId is needed, a mismatch will result in error as well (100010 - Authentication API Key not matching gameId).
+
+:::
+
+# API error handling
+
+## Error States
+
+The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used.
+
+
+
+## Error responses
+
+Sample error response:
+
+```
+{
+    "code": 103010,
+    "error": "Player with code 'nonexistingplayercode' doesn't exist in the database"
+}
+```
+
+Validation errors with json requests result in a HTTP 400 response:
+
+```
+{
+    "code": 100120,
+    "error": "Validation errors",
+    "details": [
+        {
+            "code": "INVALID_TYPE",
+            "params": ["integer", "string"],
+            "message": "Expected type integer but found type string",
+            "path": "#/gameId",
+            "description": "The id given by MMOS for the game client for identification"
+        }
+    ]
+}
+```
+
+JSON schema to validate error responses:
+
+```
+{
+    "type": "object",
+    "required": ["code", "error"],
+    "additionalProperties": false,
+    "properties": {
+        "code": { "type": "integer", "description": "Error code" },
+        "error": { "type": "string", "description": "Error message" },
+        "details": { "type": "object", "description": "Detailed error object" }
+    }
+}
+```
+
+# Group API
+
+## API information [/]
+
+### Getting API information [GET]
+
+Returns statistical information about the API
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Body
+
+            {
+                {
+                    "name": "mmos-api-2",
+                    "version": "2.0.11",
+                    "description": "Massively Multiplayer Online Science - Citizen Science Server API 2, © 2015-2017 MMOS Sàrl",
+                    "homepage": "http://mmos.ch",
+                    "stats": {
+                        "uptime": 3.564,
+                        "uptimeFriendly": "a few seconds",
+                        "uptimeSince": "2017-05-21T19:26:28.472Z",
+                        "platform": "darwin",
+                        "architecture": "x64",
+                        "nodeVersion": "v6.10.0",
+                        "nodeEnv": "local"
+                    }
+                }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "required": ["name", "version", "description", "homepage", "stats"],
+                "additionalProperties": false,
+                "properties": {
+                    "name": { "type": "string", "description": "Application name" },
+                    "version": { "type": "string", "description": "Version number" },
+                    "description": { "type": "string", "description": "Description of the service" },
+                    "homepage": { "type": "string", "description": "MMOS homepage" },
+                    "stats": {
+                        "type": "object",
+                        "required": ["uptime", "uptimeFriendly", "uptimeSince", "platform", "architecture", "nodeVersion", "nodeEnv"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "uptime": { "type": "number", "description": "Server uptime in seconds" },
+                            "uptimeFriendly": { "type": "string", "description": "Server uptime in human readable format" },
+                            "uptimeSince": { "type": "string", "format": "date-time", "description": "Server start time" },
+                            "platform": { "type": "string", "description": "Host operating system platform" },
+                            "architecture": { "type": "string", "description": "Host processor architecture" },
+                            "nodeVersion": { "type": "string", "description": "Node.js version" },
+                            "nodeEnv": { "type": "string", "description": "Node.js environment" }
+                        }
+                    }
+                }
+            }
+
+# Group Players
+
+## Tasks [/games/{game}/players/{player}/tasks]
+
++ Parameters
+
+    + game (required, string, `:gameCode`) ... Game code
+    + player (required, string, `:playerCode`) ... Player code
+
+### Get new task for player [POST]
+
+This is the API call to get a new task for a player.
+
++ Request (application/json; charset=utf-8)
+
+    + Body
+
+            {
+                "projects": [":projectCode"],
+                "player": {
+                    "accountCode": ":accountCode"
+                }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "required": ["projects"],
+                "additionalProperties": false,
+                "properties": {
+                    "projects": { "type": "array" , "description": "An array of Project codes" },
+                    "player": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "accountCode": { "type": "string", "description": "The accountCode of the player" }
+                        }
+                    }
+                }
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Body
+
+            {
+              "uid": "c5dccfba-d1dc-4b0a-a111-ea6e6bed47f5-1547830463571",
+              "game": ":gameCode",
+              "player": {
+                "code": ":playerCode",
+                "accountCode": ":accountCode"
+              },
+              "task": {
+                "id": 10000029,
+                "run": 1,
+                "project": ":projectCode",
+                "isTrainingSet": true,
+                "difficulty": 1,
+                "assetsSecurityPass": "7c48dff5-b823-4b0f-b776-c73ba847bf71",
+                "assets": {
+                  "name": "https://www.inaturalist.org/listed_taxa/2887491",
+                  "url": "Rodrigues flying fox",
+                  "solution": [
+                    "Animalia",
+                    "Chordata",
+                    "Mammalia",
+                    "Laurasiatheria",
+                    "Chiroptera",
+                    "Yinpterochiroptera",
+                    "Pteropodidea",
+                    "Pteropodidae",
+                    "Pteropodinae",
+                    "",
+                    "Pteropus",
+                    "Pteropus rodricensis",
+                    "https://www.inaturalist.org/listed_taxa/2887491",
+                    "Rodrigues flying fox"
+                  ]
+                },
+                "info": {
+                  "info": {}
+                }
+              }
+            }
+
+
+    + Schema
+
+            {
+                "type": "object",
+                "required": [ "uid", "game", "player", "task" ],
+                "additionalProperties": false,
+                "properties": {
+                    "uid": { "type": "string", "description": "The unique identifier of the request" },
+                    "game": { "type": "string", "description": "Game code" },
+                    "player": {
+                        "type": "object",
+                        "required": [ "code", "accountCode" ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "code": { "type": "string", "description": "Player code" },
+                            "accountCode": { "type": "string", "description": "The accountCode of the player" }
+                        }
+                    },
+                    "task": {
+                        "type": "object",
+                        "required": [ "id", "project" ],
+                        "anyOf" : [
+                            { "required": ["assetsSecurityPass"] },
+                            { "required": ["assets"] }
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": { "type": "integer", "description": "Task id" },
+                            "run": { "type": "integer", "description": "Marking the run number the task is in. In other words: how many times the number of solutions reached the consensus calculation limit plus 1 (first run means the task hasn't received enough solutions for the first consensus)" },
+                            "project": { "type": "string", "description": "Project code" },
+                            "isTrainingSet": { "type": "boolean", "descirption": "Marking that the player is in the initial training period, or if isTrainingSet is explicitly set in the request. Otherwise this info is hidden" },
+                            "difficulty": { "type": "integer", "description": "The estimated difficulty of a puzzle calculated by Phylo on a 1-10 scale" },
+                            "assetsSecurityPass": { "type": "string", "description": "Not used currently" },
+                            "assets": { "type": "object", "description": "Info to get the assets (ie. images) for the task - project specific" },
+                            "info": { "type": "object" }
+                        }
+                    }
+                }
+            }
+
+
+## Players [/games/{game}/players/{player}?project={project}]
+
++ Parameters
+
+    + game (required, string, `:gameCode`) ... Game code
+    + player (required, string, `:playerCode`) ... Player code
+    + project (optional, string, `:projectCode`) ... Project code
+
+### Player statistics [GET]
+
+Get player information. Note, that it is only necessary to call this API endpoint at a session start - to check if the player exists and if yes, what is the player status.
+During a game session all the information can be acquired from the response of the classification submit call.
+
++ Response 200 (application/json; charset=utf-8)
+
+    + Body
+
+            {
+                "uid": "1495414829916-418db7e7-36fa-4f93-b540-58705a39daf3",
+                "game": ":gameCode",
+                "player": ":playerCode",
+                "createdAt": "2018-11-30T10:22:04.000Z",
+                "project": {
+                    "code": ":projectCode",
+                    "classificationCount": 1,
+                    "score": 0.487171,
+                    "reliability": 0.5091714453488716
+                }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "required": ["uid", "game", "player"],
+                "additionalProperties": false,
+                "properties": {
+                    "uid": { "type": "string", "description": "The unique identifier of the request" },
+                    "game": { "type": "string", "description": "Game code" },
+                    "player": { "type": "string", "description": "Player code" },
+                    "createdAt": { "type": "string", "description": "Player creation datetime" },
+                    "project": {
+                        "type": "object",
+                        "required": ["code", "classificationCount", "score", "reliability"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "code": { "type": "string", "description": "Project code" },
+                            "classificationCount": { "type": "integer", "description": "Number of classifications submitted by player to project" },
+                            "score": { "type": "number", "minimum": 0, "maximum": 1, "description": "Accuracy score of user in project" },
+                            "reliability": { "type": "number", "minimum": 0, "maximum": 1, "description": "Accuracy score reliability" }
+                        }
+                    }
+                }
+            }
+
+
+# Group Classifications
+
+## Classifications [/classifications]
+
+### Create a Classification [POST]
+
+
+_Result object in training set classification request:_
+
+It should be an array of strings representing phylogenetic classification like: 
+_[ "kingdom","phylum","class","sublcass","superorder","order","suborder",
+ "superfamily","family","subfamily","tribe","genus","taxon_name","url","taxon_common_name" ]_
+
+```
+{
+  "game": ":gameCode",
+  "task": {
+    "id": 10000026,
+    "result": [
+                "Animalia",
+                "Chordata",
+                "Mammalia",
+                "Laurasiatheria",
+                "Chiroptera",
+                "Yinpterochiroptera",
+                "Pteropodidea",
+                "Pteropodidae",
+                "Pteropodinae",
+                "",
+                "Pteropus",
+                "Pteropus rufus",
+                "https://www.inaturalist.org/listed_taxa/2887488",
+                "Madagascan Flying Fox"
+            ]
+  },
+  "circumstances": {
+    "t": 1
+  },
+  "player": ":playerCode",
+  "playergroup": null
+}
+```
+
+
++ Request (application/json; charset=utf-8)
+
+    + Body
+
+            {
+                "game": ":gameCode",
+                "player": ":playerCode",
+                "playergroup": "group123",
+                "task": {
+                    "id": 10000000,
+                    "result": [
+                      "Animalia",
+                      "Chordata",
+                      "Mammalia",
+                      "Laurasiatheria",
+                      "Chiroptera",
+                      "Yinpterochiroptera",
+                      "Pteropodidea",
+                      "Pteropodidae",
+                      "Pteropodinae",
+                      "",
+                      "Pteropus",
+                      "Pteropus rufus",
+                      "https://www.inaturalist.org/listed_taxa/2887488",
+                      "Madagascan Flying Fox"
+                  ]
+                },
+                "circumstances": { "t": 6000 }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "required": ["game", "player", "playergroup", "task", "circumstances"],
+                "additionalProperties": false,
+                "properties": {
+                    "game": { "type": "string", "description": "Game code" },
+                    "player": { "type": "string", "description": "Player code" },
+                    "playergroup": { "type": ["string", "null"], "description": "Playergroup code" },
+                    "task": {
+                        "type": "object",
+                        "required": ["id", "result"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": { "type": "integer", "description": "The id given by MMOS for the game client" },
+                            "result": { "type": "object", "description": "The result specified by the task type / project" }
+                        }
+                    },
+                    "circumstances": { "type": "object", "description": "All the circumstantial data of the classification" }
+                }
+            }
+
++ Response 201 (application/json; charset=utf-8)
+
+    + Body
+
+            {
+                "uid": "c1586e99-f42a-4fb3-a652-6dd5aae6ae89-1547835077841",
+                "score": 0.69263,
+                "reliability": 0.5132984967884329,
+                "info": {},
+                "task": {
+                    "id": 10000010,
+                    "project": ":projectCode",
+                    "isTrainingSet": false,
+                    "classificationCount": 4,
+                    "voteInfo": {},
+                    "votes": {}
+                },
+                "game": ":gameCode",
+                "player": {
+                    "code": ":playerCode",
+                    "score": 0.69263
+                }
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "required": ["uid", "score", "reliability", "task", "game", "player"],
+                "additionalProperties": false,
+                "properties": {
+                    "uid": { "type": "string", "description": "The unique identifier of the request" },
+                    "score": { "type": "number", "minimum": 0, "maximum": 1, "description": "Accuracy score of classification" },
+                    "reliability": { "type": "number", "minimum": 0, "maximum": 1, "description": "Accuracy score reliability" },
+                    "info": { "type": "object", "description": "Information about evaluation" },
+                    "task": {
+                        "type": "object",
+                        "required": ["id", "project", "isTrainingSet", "classificationCount"],
+                        "additionalProperties": false,
+                        "properties": {
+                            "id": { "type": "integer", "description": "Tha task id" },
+                            "project": { "type": "string", "description": "The project code" },
+                            "isTrainingSet": { "type": "boolean", "description": "Whether the task is a gold standard task" },
+                            "classificationCount": { "type": "integer", "description": "The number of classifications submitted to the task" },
+                            "solution": { "type": "object", "description": "The solution of the gold standard task" },
+                            "voteInfo": { "type": "object", "description": "Information about the community consensus" },
+                            "votes": { "type": "object", "description": "Tha community votes" }
+                        }
+                    },
+                    "game": { "type": "string", "description": "Game code" },
+                    "player": {
+                        "type": "object",
+                        "required": [ "code", "score" ],
+                        "additionalProperties": false,
+                        "properties": {
+                            "code": { "type": "string", "description": "Player code" },
+                            "score": { "type": "number", "minimum": 0, "maximum": 1, "description": "Accuracy score of the player" },
+                            "scoreChange": { "type": "number", "minimum": 0, "maximum": 1, "description": "" },
+                            "scoredAt": { "type": "string" }
+                        }
+                    }
+                }
+            }

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageVersion>2.1.0</PackageVersion>
+    <Authors>Attila Szantner</Authors>
+    <Copyright>Copyright © 2014-19 MMOS Sàrl</Copyright>
+    <Description>Massively Multiplayer Online Science - Citizen Science API client - C# SDK</Description>
+    <PackageProjectUrl>https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp</PackageProjectUrl>
+    <PackageIconUrl>https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp/raw/master/MMOS.SDK/doc/logo/icon.png</PackageIconUrl>
+    <PackageLicenseUrl>https://github.com/MassivelyMultiplayerOnlineScience/mmos-sdk-csharp/raw/master/MMOS.SDK/LICENSE</PackageLicenseUrl>
+    <PackageTags>CitizenScience Games MMOS</PackageTags>
+    <DevelopmentDependency>true</DevelopmentDependency>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>lib\Debug</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType></DebugType>
+    <OutputPath>lib\Release</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="V2\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Package.nuspec" />
+    <None Remove="LICENSE" />
+    <None Remove="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LICENSE" />
+    <EmbeddedResource Include="README.md" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+MMOS.SDK/bin
+MMOS.SDK/lib
+MMOS.SDK/obj
+
+MMOS.SDK.Tests/bin
+MMOS.SDK.Tests/lib
+MMOS.SDK.Tests/obj
+
+
+doc/source
+
+.vs
+
+*.nupkg
+
+.DS_Store
+Thumbs.db
